@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "QuestionIndex";
+}
+
+<h2>Multiple Choice Question</h2>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        LoadQuestion();
+    });
+
+    function SaveCandidateAnswer() {
+        var answerText = "";
+        $.each($("#tblQuestionOption tr").find("td:eq(0) input[type=radio]:checked"),
+            function () {
+                answerText = $(this).val();
+            });
+
+        var CandidateAnswer = { QuestionId: $("#txtQuestionId").val(), AnswerText: answerText }
+
+        $.ajax({
+            async: true,
+            type: 'GET',
+            url: '/Quiz/SaveCandidateAnswer',
+            data: CandidateAnswer,
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = "/Quiz/GetFinalResult";
+                }
+            },
+            error: function () {
+                alert("There is something went wrong.")
+            }
+        });
+    };
+
+    function LoadQuestion() {
+
+        var answerText = "";
+        $.each($("#tblQuestionOption tr").find("td:eq(0) input[type=radio]:checked"),
+            function () {
+                answerText = $(this).val();
+            });
+
+        var CandidateAnswer = { QuestionId: $("#txtQuestionId").val(), AnswerText: answerText }
+
+        $.ajax({    
+            async: true,
+            type: 'GET',
+            url: '/Quiz/UserQuestionAnswer',
+            data: CandidateAnswer,
+            dataType: 'HTML',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#divQuestionOption").html(data);
+            },
+            error: function () {
+                alert("There is something went wrong.")
+            }
+        });
+    }
+</script>
+
+<div id="divQuestionOption">
+
+</div>

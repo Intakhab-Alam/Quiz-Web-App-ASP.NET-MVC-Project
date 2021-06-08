@@ -1,0 +1,20 @@
+﻿@model QuizWebApp.ViewModel.CandidateViewModel
+@{
+    ViewBag.Title = "Result";
+}
+
+<br />
+
+<h2>Candidate Result</h2>
+
+@using(Html.BeginForm("CandidateResult", "Result", FormMethod.Post))
+{
+    <div class="container">
+        <div class="form-group">
+            @Html.LabelFor(model => model.CandidateName)
+            @Html.TextBoxFor(model => model.CandidateName, new { @class="form-control"})
+        </div>
+        <input type="submit" name="Show Result" value="Show Result" class="btn btn-success" />
+    </div>
+}
+

@@ -1,0 +1,222 @@
+﻿@model QuizWebApp.ViewModel.CategoryViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        LoadMathsQuestion();
+        LoadScienceQuestion();
+
+        $("#btnAddOption").click(function () {
+            AddOptionIntoList();
+        });
+
+        $("#btnSave").click(function () {
+            SaveQuestionAndOption();
+        });
+        
+    });
+
+    function LoadScienceQuestion() {
+
+        $.ajax({
+            async: true,
+            type: 'GET',
+            url: '/Admin/LoadScienceQuestion',
+            dataType: 'HTML',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#divScienceQuestion").html(data);
+            },
+            error: function () {
+                alert("There is some problem to process your request.Please try after some time.");
+            }
+        });
+    }
+    
+    function LoadMathsQuestion() {
+
+        $.ajax({
+            async: true,
+            type: 'GET',
+            url: '/Admin/LoadMathsQuestion',
+            dataType: 'HTML',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $("#divMathsQuestion").html(data);    
+            },
+            error: function () {
+                alert("There is some problem to process your request.Please try after some time.");
+            }
+        });
+    };
+
+    function SaveQuestionAndOption() {
+        if ($("#tblOption tr").length !== 4) {            
+            alert("Option should not more and less than 4.");
+            return false;
+        }
+
+        var answerText = "";
+        var answerValid = undefined;
+        $.each($("#tblOption tr"), function () {
+            answerText = $(this).find("td:eq(0) input[type=radio]:checked").val();
+            if (answerText !== undefined) {
+                answerValid = answerText;
+            }
+        });
+
+        if (answerValid === undefined) {
+            alert("Select the answer.");
+            return false;
+        }
+
+        var ListOfOptions = []; 
+        var answerTextData = "";
+        var QuestionOption = {};
+        var OptionText = "";
+
+        $.each($("#tblOption tr"), function () {
+            answerText = $(this).find("td:eq(0) input[type=radio]:checked").val();
+            OptionText = $(this).find("td:eq(0) input[type=radio]").val();
+            if (answerText !== undefined) {
+                answerTextData = answerText;
+            }
+            ListOfOptions.push(OptionText);
+        });
+
+        QuestionOption.ListOfOptions = ListOfOptions;
+        QuestionOption.AnswerText = answerTextData;
+        QuestionOption.QuestionName = $("#txtQuestionName").val();
+        QuestionOption.CategoryId = $("#ddCategoryId").val()
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            url: '/Admin/Index',
+            data: JSON.stringify(QuestionOption),
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.success === true) {
+                    alert(data.message)
+                    LoadMathsQuestion();
+                    LoadScienceQuestion();
+                    $("#txtQuestionName").val("");
+                    $("#txtQuestionName").focus();
+                    $("#txtOptionName").val("");
+                    $("#tblOption tr").remove();
+                    @*$("#ddCategoryId").val(1);*@
+                }
+                else {
+                    alert("There is some error.")
+                }
+            },
+            error: function () {
+                alert("There is some problem to process your request.Please try after some time.")
+            }
+        });
+    }
+
+    function AddOptionIntoList() {        
+        if ($("#txtQuestionName").val() === "") {
+            alert("Question name should not be empty.");
+            $("#txtQuestionName").focus();
+            return false;
+        }
+
+        if ($("#txtOptionName").val() === "") {
+            alert("Option name should not be empty.");
+            $("#txtOptionName").focus();
+            return false;
+        }
+
+        if ($("#tblOption tr").length === 4) {
+            $("#txtOptionName").focus();
+            $("#txtOptionName").val("");
+            alert("Option should not more than 4.");
+            return false;
+        }
+
+        var isSuccess = false;
+        $.each($("#tblOption tr"), function () {
+            var listedValue = $(this).find("td:eq(0) input[type=radio]").val();
+            if (listedValue === $("#txtOptionName").val()) {
+                $("#txtOptionName").focus();
+                $("#txtOptionName").val("");
+                alert("Its already listed.");
+                isSuccess = true;
+            }
+        });
+
+        if (isSuccess === true) {
+            return false;
+        }
+
+        var OptionName = $("#txtOptionName").val();
+        var rowAdded = "<tr><td><input type='radio' value=" + OptionName + " name='OptionName' />" + OptionName +"</td></tr>"
+
+        $("#tblOption").append(rowAdded);
+        $("#txtOptionName").focus();
+        $("#txtOptionName").val("");
+    }
+
+</script>
+
+<div class="container">
+    <div class="row">        
+        <div class="col-md-4">
+            @using (Html.BeginForm("Index", "Admin", FormMethod.Post))
+            {
+                <div class="container">
+                    <h2>Add Questions to Quiz</h2>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CategoryId)
+                        @Html.DropDownListFor(model => model.CategoryId, Model.ListOfCategory, new { @class = "form-control", id = "ddCategoryId" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.QuestionName)
+                        @Html.TextAreaFor(model => model.QuestionName, new { @class = "form-control", id = "txtQuestionName" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.OptionName)
+                        @Html.TextBoxFor(model => model.OptionName, new { @class = "form-control", id = "txtOptionName" })
+                    </div>
+                    <div class="form-group">
+                        <input id="btnAddOption" type="button" name="Option" value="Add Option" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+
+            <div class="container">
+                <table id="tblOption" class="table table-condensed" style="width:100%;">
+                </table>
+            </div>
+
+            <div class="container">
+                <div class="form-group">
+                    <input id="btnSave" type="button" value="Save" name="Save" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <h2>Maths Quiz Questions</h2>
+                <div id="divMathsQuestion">
+
+                </div>
+            </div>
+            <div>
+                <h2>Science Quiz Questions</h2>
+                <div id="divScienceQuestion">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

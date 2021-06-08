@@ -1,0 +1,42 @@
+﻿@model IEnumerable<QuizWebApp.ViewModel.ResultViewModel>
+@{
+    ViewBag.Title = "GetFinalResult";
+}
+
+<br />
+
+<table class="table table-bordered table-striped" style="width: 100%" >
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Answer By User</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Question</td>
+                    <td>@item.Answer</td>
+                    <td>@item.AnswerByUser</td>
+                    <td>
+                        @if (item.Status == "Correct")
+                        {
+                            <label style="color:green">@item.Status</label>
+                        }
+                        else
+                        {
+                            <label style="color:red">@item.Status</label>
+                        }
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+<div class="container">
+    @Html.ActionLink("Back to Quiz", "Index", "Quiz", new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Home Page", "Index", "Home", new { @class = "btn btn-primary" })
+</div>
+

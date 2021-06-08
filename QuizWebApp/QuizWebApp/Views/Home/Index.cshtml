@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<style>
+    .card {
+        box-shadow: 4px 4px 5px 0 rgba(194, 128, 234, 0.60);
+        background-color: rgba(128, 15, 196, 0.35);
+        transition: 0.3s;
+        border-radius: 5px; /* 5px rounded corners */
+        padding: 2px 1px 20px 15px;
+    }
+</style>
+
+<div class="jumbotron">
+    <h1>Competitive Examinations</h1>
+    <p class="lead">
+        In almost every competitive examinations there is a separate section for Maths, Reasoning and General knowledge. Scoring high in these section requires meticulous preparation of topics such as MATHS, REASONING, TRADITIONAL GENERAL KNOWLEDGE, INDIAN CONSTITUTION GK, HISTORY GK, GEOGRAPHY GK, SCIENCE GK, COMPUTER GK and SPORTS GK.
+        For candidates appearing in various competitive examinations to be held in India in 2021 such as SSC CGL, SSC CHSL, SSC CPO, BANKS, RAILWAYS, CDS, NDA, MAT, CAT, PSC, etc.
+    </p>    
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2>Lets started Quiz</h2>
+                @Html.ActionLink("Quiz Started >>", "Index", "Quiz", null, new { @class = "btn btn-success" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2>Candidate Result</h2>
+                @Html.ActionLink("Check Result >>", "Index", "Result", null, new { @class = "btn btn-success" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2>Employee Login</h2>
+                @Html.ActionLink("Login >>", "Index", "Account", null, new { @class = "btn btn-success" })
+            </div>
+        </div>
+    </div>
+</div>

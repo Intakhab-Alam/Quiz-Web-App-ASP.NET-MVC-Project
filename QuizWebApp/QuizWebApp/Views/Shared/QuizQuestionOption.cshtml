@@ -1,0 +1,59 @@
+﻿@model QuizWebApp.ViewModel.QuizQuestionAnswerViewModel
+
+<style type="text/css">
+    fieldset {
+        font-family: sans-serif;
+        border: 3px solid #1F497D;
+        background: #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 50px;
+        margin-left: 200px;
+        margin-right: 250px;
+    }
+
+        fieldset legend {
+            background: #1F497D;
+            color: #fff;
+            padding: 5px 10px 10px 20px;
+            font-size: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 0 5px #ddd;
+            margin-left: 1px;
+            margin-right: 10px;
+        }
+
+    input {
+        margin-top: 20px;
+    }
+</style>
+
+@{ var questionId = Model.QuestionId;}
+
+@*@Html.HiddenFor(model => model.QuestionId, new { @id = "txtQuestionId" }) It does not work.*@
+
+<input type="hidden" name="QuestionId" id="txtQuestionId" value="@questionId" />
+
+<fieldset>
+    <legend>Q @Model.QuestionId => @Model.QuestionName</legend>
+    <table id="tblQuestionOption" class="table table-condensed" style="width: 100%">
+        @foreach (var item in @Model.ListOfQuizOption)
+        {
+            <tr>
+                <td>@Html.RadioButtonFor(model => model.OptionId, @item.OptionName) @item.OptionName</td>
+            </tr>
+        }
+        <tr>
+            <td>
+                @if (Model.IsLast)
+                {
+                    <input type="button" name="Save" value="Save" class="btn btn-success" id="btnSave" onclick="SaveCandidateAnswer()" />
+                }
+                else
+                {
+                    <input type="button" name="Next" value="Next" class="btn btn-primary" id="btnNext" onclick="LoadQuestion()" />
+                }
+            </td>
+        </tr>
+    </table>
+</fieldset>

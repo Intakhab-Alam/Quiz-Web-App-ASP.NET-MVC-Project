@@ -1,0 +1,60 @@
+﻿@model IEnumerable<QuizWebApp.ViewModel.ScienceQuesViewModel>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+    function DeleteScienceQues(questionId) {
+        var confirmDelete = confirm("Are you sure ! You want to Delete this Question ?");
+        if (confirmDelete === false) {
+            return false;
+        }
+
+        var questionId = { questionId: questionId }
+
+        $.ajax({
+            async: true,
+            type: 'POST',
+            url: '/Admin/DeleteMathsQues',
+            data: JSON.stringify(questionId),
+            dataType: 'JSON',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.success === true) {
+                    alert(data.message);
+                }
+                window.location.reload();
+            },
+            error: function () {
+                alert("There is some problem to process your request.Please try after some time.");
+            }
+        });
+    }
+ </script>
+
+<table class="table table-bordered table-condensed table-striped" style="width:100%;">
+    <thead>
+        <tr>
+            <th>Ques No.</th>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(i += 1) </td>
+                <td>@item.Question</td>
+                <td>@item.Answer</td>
+                <td><input id="btnDelete" onclick="DeleteScienceQues(@item.QuestionId)" type="button" name="Delete" value="Delete" class="btn btn-danger" /></td>
+            </tr>
+        }
+    </tbody>
+
+</table>

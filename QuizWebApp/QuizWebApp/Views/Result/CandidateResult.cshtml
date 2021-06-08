@@ -1,0 +1,46 @@
+﻿@model IEnumerable<QuizWebApp.ViewModel.CandidateResultViewModel>
+@{
+    ViewBag.Title = "CandidateResult";
+}
+
+<div class="container">
+    <h2>@ViewBag.CandidateName Result</h2>
+    <table class="table table-condensed table-bordered table-striped" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Ques No.</th>
+                <th>Question</th>
+                <th>Correct Answer</th>
+                <th>Answer By User</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int i = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@( i += 1)</td>
+                    <td>@item.Question</td>
+                    <td>@item.Answer</td>
+                    <td>@item.AnswerByUser</td>
+                        <td>
+                            @if (item.Status == "Correct")
+                            {
+                                <label style="color:green">@item.Status</label>
+                            }
+                            else
+                            {
+                                <label style="color:red">@item.Status</label>
+                            }
+                        </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<div class="container">
+    @Html.ActionLink("Back to Candidate Search", "Index", "Result", new { @class="btn btn-primary"})
+</div>
